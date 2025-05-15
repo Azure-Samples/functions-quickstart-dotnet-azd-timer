@@ -21,7 +21,7 @@ This template repository contains an timer trigger reference sample for function
 
 This project is designed to run on your local computer. You can also use GitHub Codespaces:
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=836901178)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=980903900)
 
 This codespace is already configured with the required tools to complete this tutorial using either `azd` or Visual Studio Code. If you're working a codespace, skip down to [Run your app section](#run-your-app-from-the-terminal).
 
