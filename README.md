@@ -37,12 +37,34 @@ This codespace is already configured with the required tools to complete this tu
 - [Azure Storage Emulator (Azurite)](https://learn.microsoft.com/azure/storage/common/storage-use-azurite) - Required for local development with Azure Functions
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local?pivots=programming-language-csharp#install-the-azure-functions-core-tools)
+- [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
 - To use Visual Studio to run and debug locally:
   - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/).
   - Make sure to select the **Azure development** workload during installation.
 - To use Visual Studio Code to run and debug locally:
   - [Visual Studio Code](https://code.visualstudio.com/)
   - [Azure Functions extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
+
+## Initialize the local project
+
+You can initialize a project from this `azd` template in one of these ways:
+
+- Use this `azd init` command from an empty local (root) folder:
+
+    ```shell
+    azd init --template functions-quickstart-dotnet-azd-timer
+    ```
+
+    Supply an environment name, such as `flexquickstart` when prompted. In `azd`, the environment is used to maintain a unique deployment context for your app.
+
+- Clone the GitHub template repository locally using the `git clone` command:
+
+    ```shell
+    git clone https://github.com/Azure-Samples/functions-quickstart-dotnet-azd-timer.git
+    cd functions-quickstart-dotnet-azd-timer
+    ```
+
+    You can also clone the repository from your own fork in GitHub.
 
 ## Run your app from the terminal
 
