@@ -1,51 +1,33 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
 {
 	"name": "Functions Quickstarts Codespace",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+	"dockerFile": "Dockerfile",
 	"features": {
-		"ghcr.io/devcontainers/features/azure-cli:1": {
-			"version": "latest",
-			"bicepVersion": "latest"
-		},
-		"ghcr.io/devcontainers/features/dotnet:2": {
-			"version": "latest"
-		},
-		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {
-			"version": "latest"
-		},
-		"ghcr.io/azure/azure-dev/azd:0": {
-			"version": "stable"
-		}
+		"azure-cli": "latest"
 	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"ms-azuretools.vscode-azurefunctions",
 				"ms-azuretools.vscode-bicep",
-				"ms-azuretools.vscode-azurite"
+				"ms-azuretools.vscode-docker",
+				"ms-azuretools.vscode-azurefunctions",
+				"GitHub.copilot"
 			]
 		}
-	}
-
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5000, 5001],
-	// "portsAttributes": {
-	//		"5001": {
-	//			"protocol": "https"
-	//		}
-	// }
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "dotnet restore",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	},
+	"mounts": [
+		// Mount docker-in-docker library volume
+		"source=codespaces-linux-var-lib-docker,target=/var/lib/docker,type=volume"
+	],
+	// Always run image-defined docker-init.sh to enable docker-in-docker
+	"overrideCommand": false,
+	"remoteUser": "codespace",
+	"runArgs": [
+		// Enable ptrace-based debugging for Go in container
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined",
+		// Enable docker-in-docker configuration
+		"--init",
+		"--privileged"
+	]
 }
