@@ -23,8 +23,7 @@ def timer_function(mytimer: func.TimerRequest) -> None:
         the function immediately when the host starts, but should typically be set to False
         in production to avoid unexpected executions during deployments or restarts.
     """
-    utc_timestamp = datetime.datetime.utcnow().replace(
-        tzinfo=datetime.timezone.utc).isoformat()
+    utc_timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
     
     logging.info(f'Python timer trigger function executed at: {utc_timestamp}')
     
