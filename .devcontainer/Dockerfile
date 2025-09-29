@@ -23,5 +23,13 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > mic
 # Install Azure Developer CLI
 RUN curl -fsSL https://aka.ms/install-azd.sh | bash
 
+# Install Python tools and packages
+RUN sudo apt-get update \
+    && sudo apt-get install -y python3.11 python3.11-venv python3.11-dev python3-pip \
+    && pip3 install --upgrade pip
+
 # Install mechanical-markdown for quickstart validations
 RUN pip install mechanical-markdown
+
+# Set Python 3.11 as default python3
+RUN sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1

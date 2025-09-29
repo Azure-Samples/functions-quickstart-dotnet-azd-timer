@@ -1,23 +1,23 @@
 <!--
 ---
-name: Azure Functions C# Timer Trigger using Azure Developer CLI
-description: This repository contains an Azure Functions timer trigger quickstart written in C# and deployed to Azure Functions Flex Consumption using the Azure Developer CLI (azd). The sample uses managed identity and a virtual network to make sure deployment is secure by default.
+name: Azure Functions Python Timer Trigger using Azure Developer CLI
+description: This repository contains an Azure Functions timer trigger quickstart written in Python v2 and deployed to Azure Functions Flex Consumption using the Azure Developer CLI (azd). The sample uses managed identity and a virtual network to make sure deployment is secure by default.
 page_type: sample
 products:
 - azure-functions
 - azure
 - entra-id
-urlFragment: starter-timer-trigger-csharp
+urlFragment: starter-timer-trigger-python
 languages:
-- csharp
+- python
 - bicep
 - azdeveloper
 ---
 -->
 
-# Azure Functions C# Timer Trigger using Azure Developer CLI
+# Azure Functions Python Timer Trigger using Azure Developer CLI
 
-This template repository contains an timer trigger reference sample for functions written in C# (isolated process mode) and deployed to Azure using the Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default. You can opt out of a VNet being used in the sample by setting VNET_ENABLED to false in the parameters.
+This template repository contains a timer trigger reference sample for functions written in Python v2 and deployed to Azure using the Azure Developer CLI (`azd`). The sample uses managed identity and a virtual network to make sure deployment is secure by default. You can opt out of a VNet being used in the sample by setting VNET_ENABLED to false in the parameters.
 
 This project is designed to run on your local computer. You can also use GitHub Codespaces:
 
@@ -124,49 +124,55 @@ azd down
 
 ## Source Code
 
-The function code for the timer trigger is defined in [`timerFunction.cs`](./timer/timerFunction.cs).
+The function code for the timer trigger is defined in [`timer_function.py`](./timer/timer_function.py).
 
 This code shows the timer function implementation:  
 
-```csharp
-/// <summary>
-/// Timer-triggered function that executes on a schedule defined by TIMER_SCHEDULE app setting.
-/// </summary>
-/// <param name="myTimer">Timer information including schedule status</param>
-/// <param name="context">Function execution context</param>
-/// <remarks>
-/// The RunOnStartup=true parameter is useful for development and testing as it triggers
-/// the function immediately when the host starts, but should typically be set to false
-/// in production to avoid unexpected executions during deployments or restarts.
-/// </remarks>
-[Function("timerFunction")]
-public void Run(
-    [TimerTrigger("%TIMER_SCHEDULE%", RunOnStartup = true)] TimerInfo myTimer,
-    FunctionContext context
-)
-{
-    _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+```python
+import datetime
+import logging
+import azure.functions as func
 
-    if (myTimer.IsPastDue)
-    {
-        _logger.LogWarning("The timer is running late!");
-    }
-}
+app = func.FunctionApp()
+
+@app.timer_trigger(schedule="%TIMER_SCHEDULE%", 
+                   arg_name="mytimer", 
+                   run_on_startup=True,
+                   use_monitor=False) 
+def timer_function(mytimer: func.TimerRequest) -> None:
+    """
+    Timer-triggered function that executes on a schedule defined by TIMER_SCHEDULE app setting.
+    
+    Args:
+        mytimer: Timer information including schedule status
+        
+    Notes:
+        The run_on_startup=True parameter is useful for development and testing as it triggers
+        the function immediately when the host starts, but should typically be set to False
+        in production to avoid unexpected executions during deployments or restarts.
+    """
+    utc_timestamp = datetime.datetime.utcnow().replace(
+        tzinfo=datetime.timezone.utc).isoformat()
+    
+    logging.info(f'Python timer trigger function executed at: {utc_timestamp}')
+    
+    if mytimer.past_due:
+        logging.warning('The timer is running late!')
 ```
 
-The isolated worker process C# library uses the [TimerTriggerAttribute](https://github.com/Azure/azure-functions-dotnet-worker/blob/main/extensions/Worker.Extensions.Timer/src/TimerTriggerAttribute.cs) from [Microsoft.Azure.Functions.Worker.Extensions.Timer](https://www.nuget.org/packages/Microsoft.Azure.Functions.Worker.Extensions.Timer) to define the function
+The Python v2 programming model uses the [@app.timer_trigger](https://docs.microsoft.com/en-us/python/api/azure-functions/azure.functions.decorators#azure-functions-decorators-timer-trigger) decorator from [azure-functions](https://pypi.org/project/azure-functions/) to define the function
 
 ### Key Features
 
 1. **Parameterized Schedule**: The function uses the `%TIMER_SCHEDULE%` environment variable to determine the execution schedule, making it configurable without code changes.
 
-2. **RunOnStartup Parameter**: Setting `RunOnStartup = true` makes the function execute immediately when the app starts, in addition to running on the defined schedule. This is useful for testing but can be disabled in production.
+2. **run_on_startup Parameter**: Setting `run_on_startup=True` makes the function execute immediately when the app starts, in addition to running on the defined schedule. This is useful for testing but should be set to `False` in production.
 
-3. **Past Due Detection**: The function checks if the timer is past due using the `myTimer.IsPastDue` property, allowing for appropriate handling of delayed executions.
+3. **Past Due Detection**: The function checks if the timer is past due using the `mytimer.past_due` property, allowing for appropriate handling of delayed executions.
 
-4. **Dependency Injection**: The function uses dependency injection to get a properly configured logger, following best practices for Azure Functions.
+4. **Python v2 Programming Model**: This function uses the Python v2 programming model with decorators, providing a more intuitive and Pythonic development experience.
 
-5. **Isolated Process Mode**: This function runs in isolated process mode, which provides better isolation and more flexibility compared to in-process execution.
+5. **Built-in Logging**: The function uses Python's built-in logging module, which integrates seamlessly with Azure Functions and Application Insights.
 
 ### Configuration
 

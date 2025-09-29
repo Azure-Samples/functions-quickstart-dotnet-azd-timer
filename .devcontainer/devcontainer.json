@@ -10,6 +10,8 @@
 				"ms-azuretools.vscode-bicep",
 				"ms-azuretools.vscode-docker",
 				"ms-azuretools.vscode-azurefunctions",
+				"ms-python.python",
+				"ms-python.pylint",
 				"GitHub.copilot"
 			]
 		}
