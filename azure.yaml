@@ -5,6 +5,6 @@ metadata:
   template: functions-quickstart-dotnet-azd-timer@1.0.0
 services:
   api:
-    project: ./timer/
+    project: ./src/
     language: dotnet
     host: function
