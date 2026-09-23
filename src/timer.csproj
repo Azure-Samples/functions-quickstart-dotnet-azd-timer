@@ -8,13 +8,13 @@
     <UserSecretsId>09bd123b-3401-4507-b92c-0b283b95b537</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.21.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.51.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.0.7" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.22.0" />
     <PackageReference
       Include="Microsoft.Azure.Functions.Worker.ApplicationInsights"
-      Version="1.2.0"
+      Version="2.50.0"
     />
   </ItemGroup>
   <ItemGroup>
