@@ -35,11 +35,11 @@ This codespace is already configured with the required tools to complete this tu
 ## Prerequisites
 
 - [Azure Storage Emulator (Azurite)](https://learn.microsoft.com/azure/storage/common/storage-use-azurite) - Required for local development with Azure Functions
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local?pivots=programming-language-csharp#install-the-azure-functions-core-tools)
 - [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
 - To use Visual Studio to run and debug locally:
-  - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/).
+  - [Visual Studio 2026](https://visualstudio.microsoft.com/vs/).
   - Make sure to select the **Azure development** workload during installation.
 - To use Visual Studio Code to run and debug locally:
   - [Visual Studio Code](https://code.visualstudio.com/)
@@ -147,27 +147,19 @@ The function code for the timer trigger is defined in [`timerFunction.cs`](./src
 This code shows the timer function implementation:  
 
 ```csharp
-/// <summary>
-/// Timer-triggered function that executes on a schedule defined by TIMER_SCHEDULE app setting.
-/// </summary>
-/// <param name="myTimer">Timer information including schedule status</param>
-/// <param name="context">Function execution context</param>
-/// <remarks>
-/// The RunOnStartup=true parameter is useful for development and testing as it triggers
-/// the function immediately when the host starts, but should typically be set to false
-/// in production to avoid unexpected executions during deployments or restarts.
-/// </remarks>
 [Function("timerFunction")]
-public void Run(
-    [TimerTrigger("%TIMER_SCHEDULE%", RunOnStartup = true)] TimerInfo myTimer,
-    FunctionContext context
-)
+public void Run([TimerTrigger("%TIMER_SCHEDULE%")] TimerInfo myTimer)
 {
-    _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+    _logger.LogInformation("C# Timer trigger function executed at: {executionTime}", DateTime.Now);
 
     if (myTimer.IsPastDue)
     {
         _logger.LogWarning("The timer is running late!");
+    }
+
+    if (myTimer.ScheduleStatus is not null)
+    {
+        _logger.LogInformation("Next timer schedule at: {nextSchedule}", myTimer.ScheduleStatus.Next);
     }
 }
 ```
@@ -178,9 +170,9 @@ The isolated worker process C# library uses the [TimerTriggerAttribute](https://
 
 1. **Parameterized Schedule**: The function uses the `%TIMER_SCHEDULE%` environment variable to determine the execution schedule, making it configurable without code changes.
 
-2. **RunOnStartup Parameter**: Setting `RunOnStartup = true` makes the function execute immediately when the app starts, in addition to running on the defined schedule. This is useful for testing but can be disabled in production.
+2. **Past Due Detection**: The function checks if the timer is past due using the `myTimer.IsPastDue` property, allowing for appropriate handling of delayed executions.
 
-3. **Past Due Detection**: The function checks if the timer is past due using the `myTimer.IsPastDue` property, allowing for appropriate handling of delayed executions.
+3. **Schedule Status**: The function logs the next scheduled execution when schedule status is available.
 
 4. **Dependency Injection**: The function uses dependency injection to get a properly configured logger, following best practices for Azure Functions.
 
