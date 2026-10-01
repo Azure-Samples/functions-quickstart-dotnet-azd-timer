@@ -1,13 +1,20 @@
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
     .ConfigureServices(services =>
     {
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
+        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
+        {
+            services.AddOpenTelemetry()
+                .UseFunctionsWorkerDefaults()
+                .UseAzureMonitorExporter();
+        }
     })
     .Build();
 
