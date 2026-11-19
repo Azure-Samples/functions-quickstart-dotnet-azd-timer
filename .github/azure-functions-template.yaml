@@ -1,0 +1,12 @@
+# This descriptor drives template package creation in the packaging pipeline.
+schemaVersion: 1
+
+identity: Azure.Functions.Templates.TimerDotNet
+description: Create a .NET isolated Azure Functions app that runs on a configurable timer schedule, with Bicep infrastructure for deployment using azd.
+
+projects:
+  - name: Azure Functions Timer Trigger QuickStart (.NET)
+    shortName: functions-quickstart-dotnet-timer
+    root: .
+    stack: dotnet
+    language: "C#"
