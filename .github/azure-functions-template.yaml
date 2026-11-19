@@ -6,7 +6,7 @@ description: Create a .NET isolated Azure Functions app that runs on a configura
 
 projects:
   - name: Azure Functions Timer Trigger QuickStart (.NET)
-    shortName: timer-trigger-csharp-azd
+    shortName: functions-quickstart-dotnet-timer
     root: .
     stack: dotnet
     language: "C#"
